@@ -4,5 +4,17 @@
     "label": "Webhook URL",
     "type": "text",
     "default": ""
+  },
+  {
+    "id": "combined",
+    "label": "Load combined metadata",
+    "type": "bool",
+    "default": "true"
+  },
+  {
+    "id": "contributors",
+    "label": "Load all metadata",
+    "type": "bool",
+    "default": "false"
   }
 ]
