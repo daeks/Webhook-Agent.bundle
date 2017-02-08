@@ -1,0 +1,8 @@
+[
+  {
+    "id": "webhook",
+    "label": "Webhook URL",
+    "type": "text",
+    "default": ""
+  }
+]
