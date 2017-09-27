@@ -11,7 +11,7 @@ class WebhookAgent(Agent.Movies):
   name = 'Webhook Metadata Agent'
   languages = [Locale.Language.NoLanguage]
   primary_provider = False
-  contributes_to = ['com.plexapp.agents.none']
+  contributes_to = ['com.plexapp.agents.development','com.plexapp.agents.none']
 
   def search(self, results, media, lang):
 
@@ -37,23 +37,18 @@ class WebhookAgent(Agent.Movies):
   
     output = {}
     output['event'] = 'metadata.update'
-    output['provider'] = str(data.provider)
-    output['id'] = data.id
-    output['guid'] = data.guid
     output['root_file'] = root_file
     output['ext'] = ext
-    
-    if data.title:
-      output['title'] = str(data.title.encode('utf-8'))
-    
-    if data.summary:
-      output['summary'] = str(data.summary.encode('utf-8'))
-      
-    if data.rating:
-      output['rating'] = data.rating
-      
-    if data.title_sort:
-      output['title_sort'] = str(data.title_sort.encode('utf-8'))
+
+    for key, obj in data.attrs.items():
+      if isinstance(obj, Framework.modelling.attributes.StringObject):
+        output[key] = getattr(data, key)
+      elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
+        output[key] = getattr(data, key)
+      elif isinstance(obj, Framework.modelling.attributes.FloatObject):
+          output[key] = getattr(data, key)
+      else:
+        pass
    
     jdata = JSON.StringFromObject(output)
     
