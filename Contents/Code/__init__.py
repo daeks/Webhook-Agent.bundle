@@ -37,6 +37,9 @@ class WebhookAgent(Agent.Movies):
   
     output = {}
     output['event'] = 'metadata.update'
+    output['provider'] = str(data.provider)
+    output['id'] = data.id
+    output['guid'] = data.guid
     output['root_file'] = root_file
     output['ext'] = ext
 
