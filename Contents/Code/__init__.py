@@ -50,15 +50,15 @@ class WebhookAgent(Agent.Movies):
       Log('Loading data of primary contributer %s' % primary_contributor)
       primary_data = metadata.contribution(primary_contributor)
       
-    for key, obj in primary_data.attrs.items():
-      if isinstance(obj, Framework.modelling.attributes.StringObject):
-        output[key] = getattr(primary_data, key)
-      elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
-        output[key] = getattr(primary_data, key)
-      elif isinstance(obj, Framework.modelling.attributes.FloatObject):
+      for key, obj in primary_data.attrs.items():
+        if isinstance(obj, Framework.modelling.attributes.StringObject):
           output[key] = getattr(primary_data, key)
-      else:
-        pass
+        elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
+          output[key] = getattr(primary_data, key)
+        elif isinstance(obj, Framework.modelling.attributes.FloatObject):
+            output[key] = getattr(primary_data, key)
+        else:
+          pass
 
     for key, obj in data.attrs.items():
       if isinstance(obj, Framework.modelling.attributes.StringObject):
