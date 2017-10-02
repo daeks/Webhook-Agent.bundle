@@ -22,18 +22,20 @@ class WebhookAgent(Agent.Movies):
     if Prefs['webhook']:
       if Prefs['combined']:
         Log('Loading data of contributer combined')
-        self.hook(media, metadata.contribution('_combined'))
+        self.hook(media, metadata, '_combined')
 
       if Prefs['contributors']:
         for contributor in metadata.contributors:
           if contributor.startswith('com.'):
             Log('Loading data of contributer %s' % contributor)
-            self.hook(media, metadata.contribution(contributor))
+            self.hook(media, metadata, contributor)
             
-  def hook(self, media, data):
+  def hook(self, media, metadata, contributor):
     part = media.items[0].parts[0]
     path = os.path.dirname(part.file)
     (root_file, ext) = os.path.splitext(os.path.basename(part.file))
+  
+    data = metadata.contribution(contributor)
   
     output = {}
     output['event'] = 'metadata.update'
@@ -42,13 +44,31 @@ class WebhookAgent(Agent.Movies):
     output['guid'] = data.guid
     output['root_file'] = root_file
     output['ext'] = ext
+    
+    if contributor is '_combined':
+      primary_contributor = data.guid.split(':')[0]
+      Log('Loading data of primary contributer %s' % primary_contributor)
+      primary_data = metadata.contribution(primary_contributor)
+      
+    for key, obj in primary_data.attrs.items():
+      if isinstance(obj, Framework.modelling.attributes.StringObject):
+        output[key] = getattr(primary_data, key)
+      elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
+        output[key] = getattr(primary_data, key)
+      elif isinstance(obj, Framework.modelling.attributes.FloatObject):
+          output[key] = getattr(primary_data, key)
+      else:
+        pass
 
     for key, obj in data.attrs.items():
       if isinstance(obj, Framework.modelling.attributes.StringObject):
-        output[key] = getattr(data, key)
+        if not getattr(data, key) is None:
+          output[key] = getattr(data, key)
       elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
-        output[key] = getattr(data, key)
+        if not getattr(data, key) is None:
+          output[key] = getattr(data, key)
       elif isinstance(obj, Framework.modelling.attributes.FloatObject):
+        if not getattr(data, key) is None:
           output[key] = getattr(data, key)
       else:
         pass
