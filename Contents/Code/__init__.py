@@ -14,11 +14,9 @@ class WebhookAgent(Agent.Movies):
   contributes_to = ['com.plexapp.agents.development','com.plexapp.agents.none','com.plexapp.agents.imdb']
 
   def search(self, results, media, lang):
-
     results.Append(MetadataSearchResult(id = media.id, name = media.name, year = None, score = 100, lang = lang))
 
   def update(self, metadata, media, lang):
-  
     if Prefs['webhook']:
       if Prefs['combined']:
         Log('Loading data of contributer combined')
