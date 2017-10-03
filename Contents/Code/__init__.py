@@ -50,7 +50,7 @@ class WebhookAgent(Agent.Movies):
       
       for key, obj in primary_data.attrs.items():
         if isinstance(obj, Framework.modelling.attributes.StringObject):
-          output[key] = getattr(primary_data, key)
+          output[key] = str(getattr(primary_data, key)).replace('"', '')
         elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
           output[key] = getattr(primary_data, key)
         elif isinstance(obj, Framework.modelling.attributes.FloatObject):
@@ -61,7 +61,7 @@ class WebhookAgent(Agent.Movies):
     for key, obj in data.attrs.items():
       if isinstance(obj, Framework.modelling.attributes.StringObject):
         if not getattr(data, key) is None:
-          output[key] = getattr(data, key)
+          output[key] = str(getattr(data, key)).replace('"', '')
       elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
         if not getattr(data, key) is None:
           output[key] = getattr(data, key)
