@@ -11,7 +11,7 @@ class WebhookAgent(Agent.Movies):
   name = 'Webhook Metadata Agent'
   languages = [Locale.Language.NoLanguage]
   primary_provider = False
-  contributes_to = ['com.plexapp.agents.development','com.plexapp.agents.none','com.plexapp.agents.imdb']
+  contributes_to = ['com.plexapp.agents.development', 'com.plexapp.agents.none', 'com.plexapp.agents.imdb', 'com.plexapp.agents.themoviedb']
 
   def search(self, results, media, lang):
     results.Append(MetadataSearchResult(id = media.id, name = media.name, year = None, score = 100, lang = lang))
