@@ -1,4 +1,4 @@
-import hashlib, os, time
+import os 
 
 def Start():
   pass
@@ -47,6 +47,12 @@ class WebhookAgent(Agent.Movies):
       primary_contributor = data.guid.split(':')[0]
       Log('Loading data of primary contributer %s' % primary_contributor)
       primary_data = metadata.contribution(primary_contributor)
+      
+      output['posters'] = {}
+      i = 0
+      for obj in data.posters:
+        output['posters'][i] = obj
+        i += 1
       
       for key, obj in primary_data.attrs.items():
         if isinstance(obj, Framework.modelling.attributes.StringObject):
