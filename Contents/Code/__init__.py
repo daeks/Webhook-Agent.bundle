@@ -112,7 +112,11 @@ class WebhookAgent(Agent.TV_Shows):
             Log('Loading data of contributer %s' % contributor)
             self.hook(media, metadata, contributor)
             
-  def hook(self, media, metadata, contributor): 
+  def hook(self, media, metadata, contributor):
+    part = media.children[0].children[0].items[0].parts[0]
+    path = os.path.dirname(part.file)
+    (root_file, ext) = os.path.splitext(os.path.basename(part.file))
+  
     data = metadata.contribution(contributor)
   
     output = {}
@@ -121,6 +125,8 @@ class WebhookAgent(Agent.TV_Shows):
     output['provider'] = str(data.provider)
     output['id'] = media.id
     output['guid'] = data.guid
+    output['root_file'] = root_file
+    output['ext'] = ext
     
     for snum, season in media.seasons.iteritems():
       output['season'] = season.index
