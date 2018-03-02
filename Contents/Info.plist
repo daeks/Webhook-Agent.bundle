@@ -4,6 +4,8 @@
 <dict>
   <key>CFBundleIdentifier</key>
   <string>com.plexapp.agents.webhook</string>
+  <key>PlexAgentAttributionText</key>
+  <string>This Metadata Agent is supposed to be an extension to the webhook mechanism. On a metadata refresh it fetches the combined metadata and sends it as POST payload to a given webhook.&lt;br/&gt;&lt;br/&gt;&lt;a href=&quot;http://forums.plex.tv/discussion/257668/rel-metadata-webhook-agent&quot;&gt;Plex Forum Support&lt;/a&gt;</string>
   <key>PlexFrameworkVersion</key>
   <string>2</string>
   <key>PlexPluginClass</key>

@@ -8,12 +8,12 @@ def ValidatePrefs():
 
 def dump(self, obj):
   for attr in dir(obj):
-    Log('obj.%s = %s' % (attr, getattr(obj, attr)))
-  Log('obj has been dumped')
+    Log('[HOOK] obj.%s = %s' % (attr, getattr(obj, attr)))
+  Log('[HOOK] obj has been dumped')
 
 class WebhookAgent(Agent.Movies):
 
-  name = 'Webhook Metadata Agent'
+  name = 'Webhook Metadata Agent (Movies)'
   languages = [Locale.Language.NoLanguage]
   primary_provider = False
   contributes_to = ['com.plexapp.agents.none', 'com.plexapp.agents.imdb', 'com.plexapp.agents.themoviedb']
@@ -24,13 +24,13 @@ class WebhookAgent(Agent.Movies):
   def update(self, metadata, media, lang):
     if Prefs['webhook']:
       if Prefs['combined']:
-        Log('Loading data of contributer combined')
+        Log('[HOOK] Loading data of contributer combined')
         self.hook(media, metadata, '_combined')
 
       if Prefs['contributors']:
         for contributor in metadata.contributors:
           if contributor.startswith('com.'):
-            Log('Loading data of contributer %s' % contributor)
+            Log('[HOOK] Loading data of contributer %s' % contributor)
             self.hook(media, metadata, contributor)
             
   def hook(self, media, metadata, contributor):
@@ -51,7 +51,7 @@ class WebhookAgent(Agent.Movies):
     
     if contributor is '_combined':
       primary_contributor = data.guid.split(':')[0]
-      Log('Loading data of primary contributer %s' % primary_contributor)
+      Log('[HOOK] Loading data of primary contributer %s' % primary_contributor)
       primary_data = metadata.contribution(primary_contributor)
       
       output['posters'] = {}
@@ -85,14 +85,14 @@ class WebhookAgent(Agent.Movies):
    
     jdata = JSON.StringFromObject(output)
     
-    Log('Parsed metadata to JSON String %s' % jdata)
-    Log('Sending payload to %s' % Prefs['webhook'])
+    Log('[HOOK] Parsed metadata to JSON String %s' % jdata)
+    Log('[HOOK] Sending payload to %s' % Prefs['webhook'])
     post_values = {'payload': jdata}
     result = HTTP.Request(Prefs['webhook'], values=post_values)
       
 class WebhookAgent(Agent.TV_Shows):
 
-  name = 'Webhook Metadata Agent'
+  name = 'Webhook Metadata Agent (TV)'
   languages = [Locale.Language.NoLanguage]
   primary_provider = False
   contributes_to = ['com.plexapp.agents.none', 'com.plexapp.agents.thetvdb', 'com.plexapp.agents.themoviedb']
@@ -103,13 +103,13 @@ class WebhookAgent(Agent.TV_Shows):
   def update(self, metadata, media, lang):
     if Prefs['webhook']:
       if Prefs['combined']:
-        Log('Loading data of contributer combined')
+        Log('[HOOK] Loading data of contributer combined')
         self.hook(media, metadata, '_combined')
 
       if Prefs['contributors']:
         for contributor in metadata.contributors:
           if contributor.startswith('com.'):
-            Log('Loading data of contributer %s' % contributor)
+            Log('[HOOK] Loading data of contributer %s' % contributor)
             self.hook(media, metadata, contributor)
             
   def hook(self, media, metadata, contributor):
@@ -135,7 +135,7 @@ class WebhookAgent(Agent.TV_Shows):
       
     if contributor is '_combined':
       primary_contributor = data.guid.split(':')[0]
-      Log('Loading data of primary contributer %s' % primary_contributor)
+      Log('[HOOK] Loading data of primary contributer %s' % primary_contributor)
       primary_data = metadata.contribution(primary_contributor)
       
       for snum, season in media.seasons.iteritems():
@@ -170,7 +170,7 @@ class WebhookAgent(Agent.TV_Shows):
     
     jdata = JSON.StringFromObject(output)
     
-    Log('Parsed metadata to JSON String %s' % jdata)
-    Log('Sending payload to %s' % Prefs['webhook'])
+    Log('[HOOK] Parsed metadata to JSON String %s' % jdata)
+    Log('[HOOK] Sending payload to %s' % Prefs['webhook'])
     post_values = {'payload': jdata}
     result = HTTP.Request(Prefs['webhook'], values=post_values)
