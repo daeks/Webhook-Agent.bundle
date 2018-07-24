@@ -19,7 +19,10 @@ class WebhookAgent(Agent.Movies):
   contributes_to = ['com.plexapp.agents.none', 'com.plexapp.agents.imdb', 'com.plexapp.agents.themoviedb']
 
   def search(self, results, media, lang):
-    results.Append(MetadataSearchResult(id = media.id, name = media.name, year = None, score = 100, lang = lang))
+    if media.primary_agent == 'com.plexapp.agents.none':
+      results.Append(MetadataSearchResult(id = media.id, name = media.name, score = 100))
+    else:
+      results.Append(MetadataSearchResult(id = media.primary_metadata.id, score = 100))
 
   def update(self, metadata, media, lang):
     if Prefs['webhook']:
@@ -98,7 +101,10 @@ class WebhookAgent(Agent.TV_Shows):
   contributes_to = ['com.plexapp.agents.none', 'com.plexapp.agents.thetvdb', 'com.plexapp.agents.themoviedb']
 
   def search(self, results, media, lang):
-    results.Append(MetadataSearchResult(id = media.id, name = media.name, year = None, score = 100, lang = lang))
+    if media.primary_agent == 'com.plexapp.agents.none':
+      results.Append(MetadataSearchResult(id = media.id, name = media.show, score = 100))
+    else:
+      results.Append(MetadataSearchResult(id = media.primary_metadata.id, score = 100))
 
   def update(self, metadata, media, lang):
     if Prefs['webhook']:
