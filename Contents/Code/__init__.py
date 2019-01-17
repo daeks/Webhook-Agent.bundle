@@ -62,6 +62,12 @@ class WebhookAgent(Agent.Movies):
       for obj in data.posters:
         output['posters'][i] = obj
         i += 1
+        
+      output['art'] = {}
+      i = 0
+      for obj in data.art:
+        output['art'][i] = obj
+        i += 1
       
       for key, obj in primary_data.attrs.items():
         if isinstance(obj, Framework.modelling.attributes.StringObject):
@@ -134,22 +140,29 @@ class WebhookAgent(Agent.TV_Shows):
     output['root_file'] = root_file
     output['ext'] = ext
     
+    output['season_count'] = len(media.seasons)
+    i = 0
     for snum, season in media.seasons.iteritems():
-      output['season'] = season.index
       for enum, episode in season.episodes.iteritems():
-        output['episode'] = episode.index
+        i += 1
+    output['episode_count'] = i
       
     if contributor is '_combined':
       primary_contributor = data.guid.split(':')[0]
       Log('[HOOK] Loading data of primary contributer %s' % primary_contributor)
       primary_data = metadata.contribution(primary_contributor)
       
-      for snum, season in media.seasons.iteritems():
-        output['posters'] = {}
-        i = 0
-        for obj in primary_data.seasons[season.index].posters:
-          output['posters'][i] = obj
-          i += 1
+      output['posters'] = {}
+      i = 0
+      for obj in primary_data.posters:
+        output['posters'][i] = obj
+        i += 1
+        
+      output['art'] = {}
+      i = 0
+      for obj in primary_data.art:
+        output['art'][i] = obj
+        i += 1
            
       for key, obj in primary_data.attrs.items():
         if isinstance(obj, Framework.modelling.attributes.StringObject):
@@ -157,7 +170,7 @@ class WebhookAgent(Agent.TV_Shows):
         elif isinstance(obj, Framework.modelling.attributes.IntegerObject):
           output[key] = getattr(primary_data, key)
         elif isinstance(obj, Framework.modelling.attributes.FloatObject):
-            output[key] = getattr(primary_data, key)
+          output[key] = getattr(primary_data, key)
         else:
           pass
 
@@ -173,6 +186,40 @@ class WebhookAgent(Agent.TV_Shows):
           output[key] = getattr(data, key)
       else:
         pass
+        
+      output['seasons'] = {}
+      output['episodes'] = {}
+      for snum, season in media.seasons.iteritems():
+        tmp = {}
+        tmp['index'] = snum
+        tmp['id'] = season.id
+        tmp['index'] = season.index
+        tmp['originallyAvailableAt'] = season.originallyAvailableAt
+        tmp['originally_available_at'] = season.originally_available_at
+        tmp['parentTitle'] = season.parentTitle
+        tmp['title'] = season.title
+        tmp['posters'] = {}
+        i = 0
+        for obj in primary_data.seasons[season.index].posters:
+          tmp['posters'] = obj
+          i += 1
+        i = 0
+        for enum, episode in season.episodes.iteritems():
+          i += 1
+        tmp['episodes'] = i
+        output['seasons'][snum] = tmp
+        
+        output['episodes'][snum] = {}
+        for enum, episode in season.episodes.iteritems():
+          tmp = {}
+          tmp['guid'] = episode.guid
+          tmp['id'] = episode.id
+          tmp['index'] = episode.index
+          tmp['originallyAvailableAt'] = episode.originallyAvailableAt
+          tmp['originally_available_at'] = episode.originally_available_at
+          tmp['parentTitle'] = episode.parentTitle
+          tmp['title'] = episode.title
+          output['episodes'][snum][enum] = tmp
     
     jdata = JSON.StringFromObject(output)
     
