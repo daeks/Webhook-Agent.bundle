@@ -92,7 +92,7 @@ class WebhookAgent(Agent.Movies):
       else:
         pass
    
-    jdata = JSON.StringFromObject(output)
+    jdata = JSON.StringFromObject(output).decode('unicode-escape')
     
     Log('[HOOK] Parsed metadata to JSON String %s' % jdata)
     Log('[HOOK] Sending payload to %s' % Prefs['webhook'])
@@ -188,10 +188,10 @@ class WebhookAgent(Agent.TV_Shows):
         season_data['index'] = snum
         season_data['id'] = season.id
         season_data['index'] = season.index
-        season_data['originallyAvailableAt'] = season.originallyAvailableAt
-        season_data['originally_available_at'] = season.originally_available_at
-        season_data['parentTitle'] = season.parentTitle
-        season_data['title'] = season.title
+        #season_data['originallyAvailableAt'] = season.originallyAvailableAt
+        #season_data['originally_available_at'] = season.originally_available_at
+        #season_data['parentTitle'] = season.parentTitle
+        #season_data['title'] = season.title
         season_data['posters'] = {}
         i = 0
         for obj in primary_data.seasons[season.index].posters:
@@ -207,8 +207,8 @@ class WebhookAgent(Agent.TV_Shows):
           episode_data['id'] = episode.id
           episode_data['index'] = episode.index
           episode_data['originallyAvailableAt'] = episode.originallyAvailableAt
-          episode_data['originally_available_at'] = episode.originally_available_at
-          episode_data['parentTitle'] = episode.parentTitle
+          #episode_data['originally_available_at'] = episode.originally_available_at
+          #episode_data['parentTitle'] = episode.parentTitle
           episode_data['title'] = episode.title
           season_data['episodes'][enum] = episode_data
         total_episode_count += episode_count
@@ -221,7 +221,7 @@ class WebhookAgent(Agent.TV_Shows):
       output['seasons_count'] = total_season_count
       output['episodes_count'] = total_episode_count
         
-    jdata = JSON.StringFromObject(output)
+    jdata = JSON.StringFromObject(output).decode('unicode-escape')
     
     Log('[HOOK] Parsed metadata to JSON String %s' % jdata)
     Log('[HOOK] Sending payload to %s' % Prefs['webhook'])
