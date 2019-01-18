@@ -137,16 +137,7 @@ class WebhookAgent(Agent.TV_Shows):
     output['provider'] = str(data.provider)
     output['id'] = media.id
     output['guid'] = data.guid
-    output['root_file'] = root_file
-    output['ext'] = ext
-    
-    output['season_count'] = len(media.seasons)
-    i = 0
-    for snum, season in media.seasons.iteritems():
-      for enum, episode in season.episodes.iteritems():
-        i += 1
-    output['episode_count'] = i
-      
+          
     if contributor is '_combined':
       primary_contributor = data.guid.split(':')[0]
       Log('[HOOK] Loading data of primary contributer %s' % primary_contributor)
@@ -186,41 +177,50 @@ class WebhookAgent(Agent.TV_Shows):
           output[key] = getattr(data, key)
       else:
         pass
-        
+      
+      total_season_count = 0
+      total_episode_count = 0
       output['seasons'] = {}
-      output['episodes'] = {}
+      
       for snum, season in media.seasons.iteritems():
-        tmp = {}
-        tmp['index'] = snum
-        tmp['id'] = season.id
-        tmp['index'] = season.index
-        tmp['originallyAvailableAt'] = season.originallyAvailableAt
-        tmp['originally_available_at'] = season.originally_available_at
-        tmp['parentTitle'] = season.parentTitle
-        tmp['title'] = season.title
-        tmp['posters'] = {}
+        total_season_count += 1
+        season_data = {}
+        season_data['index'] = snum
+        season_data['id'] = season.id
+        season_data['index'] = season.index
+        season_data['originallyAvailableAt'] = season.originallyAvailableAt
+        season_data['originally_available_at'] = season.originally_available_at
+        season_data['parentTitle'] = season.parentTitle
+        season_data['title'] = season.title
+        season_data['posters'] = {}
         i = 0
         for obj in primary_data.seasons[season.index].posters:
-          tmp['posters'] = obj
+          season_data['posters'] = obj
           i += 1
-        i = 0
-        for enum, episode in season.episodes.iteritems():
-          i += 1
-        tmp['episodes'] = i
-        output['seasons'][snum] = tmp
         
-        output['episodes'][snum] = {}
+        season_data['episodes'] = {}
+        episode_count = 0
         for enum, episode in season.episodes.iteritems():
-          tmp = {}
-          tmp['guid'] = episode.guid
-          tmp['id'] = episode.id
-          tmp['index'] = episode.index
-          tmp['originallyAvailableAt'] = episode.originallyAvailableAt
-          tmp['originally_available_at'] = episode.originally_available_at
-          tmp['parentTitle'] = episode.parentTitle
-          tmp['title'] = episode.title
-          output['episodes'][snum][enum] = tmp
-    
+          episode_count += 1
+          episode_data = {}
+          episode_data['guid'] = episode.guid
+          episode_data['id'] = episode.id
+          episode_data['index'] = episode.index
+          episode_data['originallyAvailableAt'] = episode.originallyAvailableAt
+          episode_data['originally_available_at'] = episode.originally_available_at
+          episode_data['parentTitle'] = episode.parentTitle
+          episode_data['title'] = episode.title
+          season_data['episodes'][enum] = episode_data
+        total_episode_count += episode_count
+        
+        output['seasons'][snum] = season_data
+    if total_season_count == 1 and total_episode_count == 1:
+      output['root_file'] = root_file
+      output['ext'] = ext
+    else:
+      output['seasons_count'] = total_season_count
+      output['episodes_count'] = total_episode_count
+        
     jdata = JSON.StringFromObject(output)
     
     Log('[HOOK] Parsed metadata to JSON String %s' % jdata)
