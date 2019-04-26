@@ -1,4 +1,4 @@
-import os 
+import os, time
 
 def Start():
   pass
@@ -45,6 +45,7 @@ class WebhookAgent(Agent.Movies):
   
     output = {}
     output['event'] = 'metadata.update'
+    output['timestamp'] = time.strftime("%Y%m%d%H%M%S",time.localtime(time.time()))
     output['type'] = 'agent.movies'
     output['provider'] = str(data.provider)
     output['id'] = data.id
@@ -133,6 +134,7 @@ class WebhookAgent(Agent.TV_Shows):
   
     output = {}
     output['event'] = 'metadata.update'
+    output['timestamp'] = time.strftime("%Y%m%d%H%M%S",time.localtime(time.time()))
     output['type'] = 'agent.tv_shows'
     output['provider'] = str(data.provider)
     output['id'] = media.id
